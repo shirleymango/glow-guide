@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Welcome to Makeup For You!")
+                Text("Welcome to Glow Guide!")
                     .font(.title)
                     .padding()
                 

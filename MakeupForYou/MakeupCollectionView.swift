@@ -9,7 +9,13 @@ import SwiftUI
 
 struct MakeupCollectionView: View {
     // Sample data for the collection view
-    let makeupItems = Array(1...20).map { "Item \($0)" }
+    let makeupItems = [
+        ["1", "Mattifying Waterproof Setting Spray"],
+        ["2", "NARS Radiant Concealer"],
+        ["3", "Airbrush Flawless Waterproof Setting Spray"],
+        ["4", "Lip Glowy Balm"],
+        ["5", "Benetint Cheek Blush Stain"]
+    ]
 
     // Define a grid layout with two columns
     let columns = [
@@ -22,19 +28,20 @@ struct MakeupCollectionView: View {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(makeupItems, id: \.self) { item in
                     VStack {
-                        Rectangle()
-                            .fill(Color.pink)
+                        Image(item[0])
+                            .resizable()
+                            .scaledToFit()
                             .frame(height: 100)
                             .cornerRadius(8)
-                        
-                        Text(item)
+                        Text(item[1])
                             .font(.headline)
+                            .multilineTextAlignment(.center)
                             .padding(.top, 5)
                     }
                 }
             }
             .padding()
-            .navigationTitle("Makeup Collection")
+            .navigationTitle("Your Collection")
         }
     }
 }
