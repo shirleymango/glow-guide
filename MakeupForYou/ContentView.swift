@@ -9,13 +9,37 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            VStack {
+                Text("Welcome to Makeup For You!")
+                    .font(.title)
+                    .padding()
+                
+                NavigationLink(destination: MakeupCollectionView()) {
+                    Text("Start Here")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+            }
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct DetailView: View {
+    var body: some View {
+        VStack {
+            Text("This is the detail page!")
+                .font(.title)
+                .padding()
+        }
+        .navigationTitle("Detail View")
     }
 }

@@ -11,6 +11,7 @@
 		EEABE5F92CB7108C00F336A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEABE5F82CB7108C00F336A5 /* ContentView.swift */; };
 		EEABE5FB2CB7108D00F336A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEABE5FA2CB7108D00F336A5 /* Assets.xcassets */; };
 		EEABE5FE2CB7108D00F336A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEABE5FD2CB7108D00F336A5 /* Preview Assets.xcassets */; };
+		EEABE6072CB7160F00F336A5 /* MakeupCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEABE6062CB7160F00F336A5 /* MakeupCollectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		EEABE5FA2CB7108D00F336A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEABE5FD2CB7108D00F336A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EEABE5FF2CB7108D00F336A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EEABE6062CB7160F00F336A5 /* MakeupCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupCollectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			children = (
 				EEABE5F62CB7108C00F336A5 /* MakeupForYouApp.swift */,
 				EEABE5F82CB7108C00F336A5 /* ContentView.swift */,
+				EEABE6062CB7160F00F336A5 /* MakeupCollectionView.swift */,
 				EEABE5FA2CB7108D00F336A5 /* Assets.xcassets */,
 				EEABE5FF2CB7108D00F336A5 /* Info.plist */,
 				EEABE5FC2CB7108D00F336A5 /* Preview Content */,
@@ -138,6 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEABE6072CB7160F00F336A5 /* MakeupCollectionView.swift in Sources */,
 				EEABE5F92CB7108C00F336A5 /* ContentView.swift in Sources */,
 				EEABE5F72CB7108C00F336A5 /* MakeupForYouApp.swift in Sources */,
 			);
