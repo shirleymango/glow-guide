@@ -15,7 +15,7 @@ struct ContentView: View {
                     .font(.title)
                     .padding()
                 
-                NavigationLink(destination: MakeupCollectionView()) {
+                NavigationLink(destination: SelfieCaptureView()) {
                     Text("Start Here")
                         .padding()
                         .background(Color.blue)
