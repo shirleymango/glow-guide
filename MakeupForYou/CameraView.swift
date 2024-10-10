@@ -1,57 +1,55 @@
-//
-//  CameraView.swift
-//  MakeupForYou
-//
-//  Created by ZhuMacPro on 10/9/24.
-//
-
 import SwiftUI
-import UIKit
+import AVFoundation
 
-struct CameraView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @Binding var capturedImage: UIImage?
-
-    var body: some View {
-        CameraRepresentable(capturedImage: $capturedImage)
-            .edgesIgnoringSafeArea(.all)
+struct CameraView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        let controller = CameraViewController()
+        return controller
     }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
 
-struct CameraRepresentable: UIViewControllerRepresentable {
-    @Binding var capturedImage: UIImage?
-    @Environment(\.presentationMode) var presentationMode
+class CameraViewController: UIViewController {
+    private var captureSession: AVCaptureSession?
+    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
 
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: CameraRepresentable
-
-        init(parent: CameraRepresentable) {
-            self.parent = parent
-        }
-
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let uiImage = info[.originalImage] as? UIImage {
-                parent.capturedImage = uiImage
-            }
-            parent.presentationMode.wrappedValue.dismiss()
-        }
-
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.presentationMode.wrappedValue.dismiss()
-        }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupCamera()
     }
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
+    private func setupCamera() {
+        captureSession = AVCaptureSession()
+        guard let captureSession = captureSession else { return }
+        captureSession.sessionPreset = .high
+
+        // Get the front-facing camera
+        guard let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front),
+              let input = try? AVCaptureDeviceInput(device: frontCamera) else {
+            print("Unable to access front camera!")
+            return
+        }
+
+        // Add the front camera input to the session
+        if captureSession.canAddInput(input) {
+            captureSession.addInput(input)
+        }
+
+        // Set up the preview layer
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        if let videoPreviewLayer = videoPreviewLayer {
+            videoPreviewLayer.videoGravity = .resizeAspectFill
+            videoPreviewLayer.frame = view.layer.bounds
+            view.layer.addSublayer(videoPreviewLayer)
+        }
+
+        // Start the camera session
+        captureSession.startRunning()
     }
 
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        picker.sourceType = .camera
-        picker.allowsEditing = false
-        return picker
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        videoPreviewLayer?.frame = view.bounds
     }
-
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
