@@ -77,9 +77,29 @@ extension CameraView.CameraViewController: AVCapturePhotoCaptureDelegate {
             return
         }
 
+        // Flip the image horizontally using Core Graphics
+        let flippedImage = flipImageHorizontally(image: uiImage)
+
         DispatchQueue.main.async {
             // Set the captured image to the binding so it can be used in the SwiftUI view
-            self.capturedImage?.wrappedValue = uiImage
+            self.capturedImage?.wrappedValue = flippedImage
         }
     }
+
+    private func flipImageHorizontally(image: UIImage) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+        let context = UIGraphicsGetCurrentContext()!
+
+        // Flip the image horizontally
+        context.translateBy(x: image.size.width, y: 0)
+        context.scaleBy(x: -1.0, y: 1.0)
+
+        image.draw(in: CGRect(origin: .zero, size: image.size))
+
+        let flippedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return flippedImage ?? image
+    }
 }
+
