@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE5685542CB870DA00F9EFAE /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5685532CB870D600F9EFAE /* LoadingView.swift */; };
 		EEABE5F72CB7108C00F336A5 /* MakeupForYouApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEABE5F62CB7108C00F336A5 /* MakeupForYouApp.swift */; };
 		EEABE5F92CB7108C00F336A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEABE5F82CB7108C00F336A5 /* ContentView.swift */; };
 		EEABE5FB2CB7108D00F336A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEABE5FA2CB7108D00F336A5 /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EE5685532CB870D600F9EFAE /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		EEABE5F32CB7108C00F336A5 /* MakeupForYou.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MakeupForYou.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEABE5F62CB7108C00F336A5 /* MakeupForYouApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupForYouApp.swift; sourceTree = "<group>"; };
 		EEABE5F82CB7108C00F336A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 				EEABE5F82CB7108C00F336A5 /* ContentView.swift */,
 				EEABE6062CB7160F00F336A5 /* MakeupCollectionView.swift */,
 				EEABE6092CB74DDC00F336A5 /* SelfieCaptureView.swift */,
+				EE5685532CB870D600F9EFAE /* LoadingView.swift */,
 				EEABE60C2CB74E3F00F336A5 /* CameraView.swift */,
 				EEABE5FA2CB7108D00F336A5 /* Assets.xcassets */,
 				EEABE5FF2CB7108D00F336A5 /* Info.plist */,
@@ -152,6 +155,7 @@
 				EEABE5F92CB7108C00F336A5 /* ContentView.swift in Sources */,
 				EEABE60D2CB74E3F00F336A5 /* CameraView.swift in Sources */,
 				EEABE5F72CB7108C00F336A5 /* MakeupForYouApp.swift in Sources */,
+				EE5685542CB870DA00F9EFAE /* LoadingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
