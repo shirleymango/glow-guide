@@ -1,4 +1,7 @@
 import SwiftUI
+import UIKit
+import CoreML
+import Accelerate
 
 struct SelfieCaptureView: View {
     let lightPink: Color = Color(red: 250 / 255, green: 182 / 255, blue: 206 / 255)
@@ -8,6 +11,7 @@ struct SelfieCaptureView: View {
     @State private var showLoadingView = false
     @State private var isPhotoTaken = false
     @State private var imagePath: String? = nil // To store the image path
+    @State private var predictionResult: (tone: String?, texture: String?)? = nil // Store prediction result
 
     var body: some View {
         ZStack {
@@ -48,6 +52,12 @@ struct SelfieCaptureView: View {
                                     // Show the loading view and save the image before transitioning
                                     if let image = capturedImage {
                                         saveImageToDocumentDirectory(image: image)
+                                        // Call prediction function here
+                                        predictionResult = predictSkinToneAndTexture(for: image)
+                                        if let result = predictionResult {
+                                            print("Predicted Skin Tone: \(result.tone ?? "Unknown")")
+                                            print("Predicted Skin Texture: \(result.texture ?? "Unknown")")
+                                        }
                                     }
                                     showLoadingView = true
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -64,6 +74,15 @@ struct SelfieCaptureView: View {
                         )
                     }
                     .padding(.top, 20)
+
+                    if let result = predictionResult {
+                        Text("Predicted Skin Tone: \(result.tone ?? "Unknown")")
+                        Text("Predicted Skin Texture: \(result.texture ?? "Unknown")")
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .padding(.top, 20)
+                    }
                 } else {
                     // Show the live camera feed when no photo is taken
                     CameraView(capturedImage: $capturedImage)
@@ -126,4 +145,68 @@ struct SelfieCaptureView_Previews: PreviewProvider {
     static var previews: some View {
         SelfieCaptureView()
     }
+}
+
+func predictSkinToneAndTexture(for image: UIImage) -> (tone: String?, texture: String?)? {
+    // Ensure the model is loaded correctly
+    guard let model = try? skin_model(configuration: .init()) else {
+        print("Failed to load model")
+        return nil
+    }
+
+    // Preprocess the image to MLMultiArray
+    guard let mlArray = imageToMultiArray(image: image, size: CGSize(width: 128, height: 128)) else {
+        print("Failed to convert image to MLMultiArray")
+        return nil
+    }
+
+    // Make the prediction
+    guard let prediction = try? model.prediction(input_1: mlArray) else {
+        print("Failed to make prediction")
+        return nil
+    }
+
+    // Extract results
+    print(prediction)
+    
+    return (tone: "Sample Tone", texture: "Sample Texture")
+}
+
+// Helper function to create MLMultiArray from UIImage and add batch dimension
+func imageToMultiArray(image: UIImage, size: CGSize) -> MLMultiArray? {
+    // Convert UIImage to CGImage
+    guard let cgImage = image.cgImage else {
+        return nil
+    }
+
+    // Create MLMultiArray to hold image data with 4D shape: [1, 3, height, width]
+    guard let mlArray = try? MLMultiArray(shape: [1, NSNumber(value: Int(size.height)), NSNumber(value: Int(size.width)), 3], dataType: .float32) else {
+        return nil
+    }
+
+    // Create a context for image processing
+    let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
+    guard let context = CGContext(data: mlArray.dataPointer,
+                                  width: Int(size.width),
+                                  height: Int(size.height),
+                                  bitsPerComponent: 8,
+                                  bytesPerRow: Int(size.width) * 4,
+                                  space: rgbColorSpace,
+                                  bitmapInfo: bitmapInfo.rawValue) else {
+        return nil
+    }
+    
+    // Draw the image in the context
+    context.draw(cgImage, in: CGRect(origin: .zero, size: size))
+    
+    // Normalize the image pixel values between 0 and 1
+    let count = Int(size.height * size.width)
+    for i in 0..<count {
+        mlArray[[0, 0, NSNumber(value: i % Int(size.height)), NSNumber(value: i / Int(size.height))]] = NSNumber(value: Float(mlArray[[0, 0, NSNumber(value: i % Int(size.height)), NSNumber(value: i / Int(size.height))]].floatValue) / 255.0)
+        mlArray[[0, 1, NSNumber(value: i % Int(size.height)), NSNumber(value: i / Int(size.height))]] = NSNumber(value: Float(mlArray[[0, 1, NSNumber(value: i % Int(size.height)), NSNumber(value: i / Int(size.height))]].floatValue) / 255.0)
+        mlArray[[0, 2, NSNumber(value: i % Int(size.height)), NSNumber(value: i / Int(size.height))]] = NSNumber(value: Float(mlArray[[0, 2, NSNumber(value: i % Int(size.height)), NSNumber(value: i / Int(size.height))]].floatValue) / 255.0)
+    }
+    
+    return mlArray
 }
