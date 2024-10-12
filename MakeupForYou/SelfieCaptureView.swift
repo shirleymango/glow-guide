@@ -116,7 +116,10 @@ struct SelfieCaptureView: View {
             .padding()
             .background(
                 NavigationLink(
-                    destination: MakeupCollectionView(),
+                    destination: MakeupCollectionView(
+                        predictedToneLabel: predictionResult?.tone ?? "Unknown",
+                        predictedTextureLabel: predictionResult?.texture ?? "Unknown"
+                    ),
                     isActive: $isPhotoTaken,
                     label: { EmptyView() }
                 )
@@ -172,8 +175,8 @@ func predictSkinToneAndTexture(for image: UIImage) -> (tone: String?, texture: S
     let textureArray: [Double] = [prediction.Identity_1[1].doubleValue]  // Replace with actual texture array output
 
     // Define the labels for tone and texture
-    let toneLabels = ["Dark", "Fair", "Medium"]
-    let textureLabels = ["Combination", "Dry", "Oily"]
+    let toneLabels = ["dark", "light", "medium"]
+    let textureLabels = ["combination", "dry", "oily"]
 
     // Function to get the label from the prediction array
     func getLabel(from array: [Double], labels: [String]) -> String? {
