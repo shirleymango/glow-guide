@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct SelfieCaptureView: View {
-    let lightPink : Color = Color(red: 250/255, green: 182/255, blue: 206/255)
-    let hotPink : Color = Color(red: 242/255, green: 12/255, blue: 93/255)
-    
+    let lightPink: Color = Color(red: 250 / 255, green: 182 / 255, blue: 206 / 255)
+    let hotPink: Color = Color(red: 242 / 255, green: 12 / 255, blue: 93 / 255)
+
     @State private var capturedImage: UIImage? = nil
     @State private var showLoadingView = false
     @State private var isPhotoTaken = false
+    @State private var imagePath: String? = nil // To store the image path
 
     var body: some View {
         ZStack {
@@ -44,7 +45,10 @@ struct SelfieCaptureView: View {
                             isActive: $showLoadingView,
                             label: {
                                 Button(action: {
-                                    // Show the loading view and then transition to the makeup collection view
+                                    // Show the loading view and save the image before transitioning
+                                    if let image = capturedImage {
+                                        saveImageToDocumentDirectory(image: image)
+                                    }
                                     showLoadingView = true
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                         isPhotoTaken = true
@@ -99,6 +103,22 @@ struct SelfieCaptureView: View {
                 )
             )
         }
+    }
+
+    // Save image to the documents directory
+    private func saveImageToDocumentDirectory(image: UIImage) {
+        if let data = image.jpegData(compressionQuality: 1.0) {
+            let filename = getDocumentsDirectory().appendingPathComponent("selfie.jpg")
+            try? data.write(to: filename)
+            imagePath = filename.path // Save the file path for later use
+            print("Image saved to: \(imagePath ?? "No Path")") // Display the saved image path
+            isPhotoTaken = true // Navigate to the next screen
+        }
+    }
+
+    // Get the document directory path
+    private func getDocumentsDirectory() -> URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 }
 
