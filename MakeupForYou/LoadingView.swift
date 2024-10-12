@@ -1,19 +1,23 @@
 import SwiftUI
 
 struct LoadingView: View {
+    let lightPink : Color = Color(red: 250/255, green: 182/255, blue: 206/255)
+    
     @State private var isAnimating = false
 
     var body: some View {
-        VStack {
-            Text("Loading...")
-                .font(.title)
-                .foregroundColor(Color.black)
-                .padding(.bottom, 20)
+        ZStack {
+            lightPink.ignoresSafeArea()
+            VStack {
+                Text("Loading...")
+                    .font(.title)
+                    .foregroundColor(Color.black)
+            }
+            .padding()
+            .background(Color.white.opacity(0.9))
+            .cornerRadius(12)
+            .shadow(radius: 5)
         }
-        .padding()
-        .background(Color.white.opacity(0.9))
-        .cornerRadius(12)
-        .shadow(radius: 5)
     }
 }
 

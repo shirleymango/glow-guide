@@ -8,19 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    let lightPink : Color = Color(red: 250/255, green: 182/255, blue: 206/255)
+    let hotPink : Color = Color(red: 242/255, green: 12/255, blue: 93/255)
+
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Welcome to Glow Guide!")
-                    .font(.title)
-                    .padding()
-                
-                NavigationLink(destination: SelfieCaptureView()) {
-                    Text("Start Here")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+            ZStack {
+                lightPink.ignoresSafeArea()
+                VStack {
+                    Text("Welcome to")
+                        .font(.title)
+                        .fontWeight(.medium)
+                        .foregroundColor(.black)
+                    Text("GLOW GUIDE")
+                        .font(.title)
+                        .fontWeight(.medium)
+                        .foregroundColor(.black)
+                    
+                    NavigationLink(destination: SelfieCaptureView()) {
+                        Text("Start Here")
+                            .padding()
+                            .background(hotPink)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
                 }
             }
         }
