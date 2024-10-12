@@ -167,7 +167,30 @@ func predictSkinToneAndTexture(for image: UIImage) -> (tone: String?, texture: S
     }
 
     // Extract results
-    print(prediction)
+    // Assuming the resultArray for tone and texture are available as [Double] arrays
+    let toneArray: [Double] = [prediction.Identity_1[0].doubleValue]  // Replace with actual tone array output
+    let textureArray: [Double] = [prediction.Identity_1[1].doubleValue]  // Replace with actual texture array output
+
+    // Define the labels for tone and texture
+    let toneLabels = ["Dark", "Fair", "Medium"]
+    let textureLabels = ["Combination", "Dry", "Oily"]
+
+    // Function to get the label from the prediction array
+    func getLabel(from array: [Double], labels: [String]) -> String? {
+        guard let maxIndex = array.firstIndex(of: array.max() ?? 0) else {
+            return nil
+        }
+        return labels[maxIndex]
+    }
+
+    // Get the predicted tone and texture labels
+    if let predictedToneLabel = getLabel(from: toneArray, labels: toneLabels),
+       let predictedTextureLabel = getLabel(from: textureArray, labels: textureLabels) {
+        print("*************")
+        print("Predicted Skin Tone: \(predictedToneLabel)")
+        print("Predicted Skin Texture: \(predictedTextureLabel)")
+        return (tone: predictedToneLabel, texture: predictedTextureLabel)
+    }
     
     return (tone: "Sample Tone", texture: "Sample Texture")
 }
