@@ -45,11 +45,14 @@ struct SelfieCaptureView: View {
                         }
 
                         NavigationLink(
-                            destination: LoadingView(),
-                            isActive: $showLoadingView,
+                            destination: MakeupCollectionView(
+                                predictedToneLabel: predictionResult?.tone ?? "Unknown",
+                                predictedTextureLabel: predictionResult?.texture ?? "Unknown"
+                            ),
+                            isActive: $isPhotoTaken,
                             label: {
                                 Button(action: {
-                                    // Show the loading view and save the image before transitioning
+                                    // Call prediction function and save the image
                                     if let image = capturedImage {
                                         saveImageToDocumentDirectory(image: image)
                                         // Call prediction function here
@@ -59,8 +62,9 @@ struct SelfieCaptureView: View {
                                             print("Predicted Skin Texture: \(result.texture ?? "Unknown")")
                                         }
                                     }
-                                    showLoadingView = true
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+                                    // Delay navigation slightly to ensure processing completes
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                         isPhotoTaken = true
                                     }
                                 }) {
@@ -105,16 +109,6 @@ struct SelfieCaptureView: View {
                 }
             }
             .padding()
-            .background(
-                NavigationLink(
-                    destination: MakeupCollectionView(
-                        predictedToneLabel: predictionResult?.tone ?? "Unknown",
-                        predictedTextureLabel: predictionResult?.texture ?? "Unknown"
-                    ),
-                    isActive: $isPhotoTaken,
-                    label: { EmptyView() }
-                )
-            )
         }
     }
 
@@ -125,7 +119,6 @@ struct SelfieCaptureView: View {
             try? data.write(to: filename)
             imagePath = filename.path // Save the file path for later use
             print("Image saved to: \(imagePath ?? "No Path")") // Display the saved image path
-            isPhotoTaken = true // Navigate to the next screen
         }
     }
 
