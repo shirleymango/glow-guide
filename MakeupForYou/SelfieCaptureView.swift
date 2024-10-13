@@ -52,20 +52,16 @@ struct SelfieCaptureView: View {
                             isActive: $isPhotoTaken,
                             label: {
                                 Button(action: {
-                                    // Call prediction function and save the image
-                                    if let image = capturedImage {
-                                        saveImageToDocumentDirectory(image: image)
-                                        // Call prediction function here
-                                        predictionResult = predictSkinToneAndTexture(for: image)
-                                        if let result = predictionResult {
-                                            print("Predicted Skin Tone: \(result.tone ?? "Unknown")")
-                                            print("Predicted Skin Texture: \(result.texture ?? "Unknown")")
+                                    // Process image and prediction on background queue
+                                    DispatchQueue.global(qos: .userInitiated).async {
+                                        if let image = capturedImage {
+                                            saveImageToDocumentDirectory(image: image)
+                                            predictionResult = predictSkinToneAndTexture(for: image)
                                         }
-                                    }
-
-                                    // Delay navigation slightly to ensure processing completes
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                        isPhotoTaken = true
+                                        // Delay the navigation to allow processing to complete
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            isPhotoTaken = true
+                                        }
                                     }
                                 }) {
                                     Text("Use Photo")
@@ -153,7 +149,6 @@ func predictSkinToneAndTexture(for image: UIImage) -> (tone: String?, texture: S
         return nil
     }
 
-    // Extract results
     // Assuming the resultArray for tone and texture are available as [Double] arrays
     let toneArray: [Double] = [prediction.Identity_1[0].doubleValue]  // Replace with actual tone array output
     let textureArray: [Double] = [prediction.Identity_1[1].doubleValue]  // Replace with actual texture array output
