@@ -74,15 +74,6 @@ struct SelfieCaptureView: View {
                         )
                     }
                     .padding(.top, 20)
-
-                    if let result = predictionResult {
-                        Text("Predicted Skin Tone: \(result.tone ?? "Unknown")")
-                        Text("Predicted Skin Texture: \(result.texture ?? "Unknown")")
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .padding(.top, 20)
-                    }
                 } else {
                     // Show the live camera feed when no photo is taken
                     CameraView(capturedImage: $capturedImage)
